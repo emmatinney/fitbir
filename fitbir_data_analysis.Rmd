@@ -1,0 +1,220 @@
+---
+title: "fitbir"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(readxl)
+library(rlang)
+library(ggplot2)
+library(dplyr)
+all_fitbir <- read_excel("/Users/emmatinney/Library/Mobile Documents/com~apple~CloudDocs/Documents/Northeastern/CCBH_Lab/Projects/fitbir/track_tbi.xlsx")
+dti_fitbir <- read_excel("/Users/emmatinney/Library/Mobile Documents/com~apple~CloudDocs/Documents/Northeastern/CCBH_Lab/Projects/fitbir/fitbir_dti.xlsx")
+df_fitbir <- left_join(dti_fitbir, all_fitbir, by = "id")
+df_fitbir$gose_baseline <- as.numeric(df_fitbir$gose_baseline)
+df_fitbir$gose_three <- as.numeric(df_fitbir$gose_three)
+df_fitbir$gose_six <- as.numeric(df_fitbir$gose_six)
+df_fitbir$SES <- as.numeric(df_fitbir$SES)
+df_fitbir$gcs_severity <- as.numeric(df_fitbir$gcs_severity)
+
+df_fitbir$ISI_total_score_base <- as.numeric(df_fitbir$ISI_total_score_base)
+df_fitbir$ISI_total_score_three <- as.numeric(df_fitbir$ISI_total_score_three)
+df_fitbir$ISI_total_score_six <- as.numeric(df_fitbir$ISI_total_score_six)
+df_fitbir$ISI_total_score_twelve <- as.numeric(df_fitbir$ISI_total_score_twelve)
+df_fitbir$gose_twelve_dicho <- as.numeric(df_fitbir$gose_twelve_dicho)
+df_fitbir$TMTPartATime_two <- as.numeric(df_fitbir$TMTPartATime_two)
+df_fitbir$TMTPartATime_six <- as.numeric(df_fitbir$TMTPartATime_six)
+df_fitbir$TMTPartATime_twelve <- as.numeric(df_fitbir$TMTPartATime_twelve)
+df_fitbir$TMTPartBTime_two <- as.numeric(df_fitbir$TMTPartBTime_two)
+df_fitbir$TMTPartBTime_six <- as.numeric(df_fitbir$TMTPartBTime_six)
+df_fitbir$TMTPartBTime_twelve <- as.numeric(df_fitbir$TMTPartBTime_twelve)
+df_fitbir$RAVLTsum_two <- as.numeric(df_fitbir$RAVLTsum_two)
+df_fitbir$RAVLTlearnt2 <- as.numeric(df_fitbir$RAVLTlearnt2)    
+df_fitbir$RAVLTsum_6m <- as.numeric(df_fitbir$RAVLTsum_6m) 
+df_fitbir$RAVLTlearnt_6m <- as.numeric(df_fitbir$RAVLTlearnt_6m) 
+df_fitbir$RAVLTsum_12m <- as.numeric(df_fitbir$RAVLTsum_12m) 
+df_fitbir$RAVLTlearnt_12m <- as.numeric(df_fitbir$RAVLTlearnt_12m) 
+df_fitbir$educ <- as.numeric(df_fitbir$educ) 
+df_fitbir$SES <- as.numeric(df_fitbir$SES) 
+df_fitbir$age <- as.numeric(df_fitbir$age) 
+case <- subset(df_fitbir, case_control=="Case")
+control <- subset(df_fitbir, case_control=="Control")
+#remove the subjects without any label
+df_filtered <- df_fitbir[complete.cases(df_fitbir$case_control), ]
+```
+
+
+```{r}
+#difference between case vs control
+summary(lm(df_fitbir$AD_19 ~ df_fitbir$case_control + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+
+#interaction between case vs control and ISI
+summary(lm(df_fitbir$AD_19 ~ df_fitbir$ISI_total_score_base + df_fitbir$case_control:df_fitbir$ISI_total_score_base + df_fitbir$case_control + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+summary(lm(df_fitbir$AD_19 ~ df_fitbir$ISI_total_score_three + df_fitbir$case_control:df_fitbir$ISI_total_score_three + df_fitbir$case_control + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+summary(lm(df_fitbir$AD_19 ~ df_fitbir$ISI_total_score_six + df_fitbir$case_control:df_fitbir$ISI_total_score_six + df_fitbir$case_control + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+summary(lm(df_fitbir$AD_19 ~ df_fitbir$ISI_total_score_twelve + df_fitbir$case_control:df_fitbir$ISI_total_score_twelve + df_fitbir$case_control + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+
+#correlation between CASES AD AIC_L and ISI
+summary(lm(case$AD_19 ~ case$ISI_total_score_base + case$SES + case$educ + case$age + case$sex))
+summary(lm(case$AD_19 ~ case$ISI_total_score_three + case$SES + case$educ + case$age + case$sex))
+summary(lm(case$AD_19 ~ case$ISI_total_score_six + case$SES + case$educ + case$age + case$sex))
+summary(lm(case$AD_19 ~ case$ISI_total_score_twelve + case$SES + case$educ + case$age + case$sex))
+
+#correlation between CONTROLS AD AIC_L and ISI
+summary(lm(control$AD_19 ~ control$ISI_total_score_base + control$SES + control$educ + control$age + control$sex))
+summary(lm(control$AD_19 ~ control$ISI_total_score_three + control$SES + control$educ + control$age + control$sex))
+summary(lm(control$AD_19 ~ control$ISI_total_score_six + control$SES + control$educ + control$age + control$sex))
+summary(lm(control$AD_19 ~ control$ISI_total_score_twelve + control$SES + control$educ + control$age + control$sex))
+
+
+#correlation between cases AD AIC_L and ravlt
+summary(lm(case$AD_19 ~ case$RAVLTlearnt2 + case$SES + case$educ + case$age + case$sex))
+summary(lm(case$AD_19 ~ case$RAVLTlearnt_6m + case$SES + case$educ + case$age + case$sex))
+summary(lm(case$AD_19 ~ case$RAVLTlearnt_12m + case$SES + case$educ + case$age + case$sex))
+
+```
+
+
+
+```{r pressure, echo=FALSE}
+library(rlang)
+library(ggplot2)
+scatterplot <- function(dataframe, x, y, ylab, xlab) {
+  ggplot(data = dataframe, aes(x={{x}}, y = {{y}})) + 
+    geom_point(color =  "#663399") + 
+    theme(
+      # Hide panel borders and remove grid lines
+      panel.border = element_blank(),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      panel.background = element_blank(),
+      # Change axis line
+      axis.line = element_line(colour = "black")
+    ) +
+    labs(y=ylab, x = xlab) +
+    stat_smooth(method = "lm", col = "#cc8400")
+}
+
+library(ggplot2)
+# a basic plot to plot linear regression results, colour coding the dots and lines
+ggplot(fitcog_55, aes(x = fitcog_55$crf_log, y = fitcog_55$reasoning_VS_PCA)) + 
+  geom_point(color =  "#663399") + 
+  theme(
+    # Hide panel borders and remove grid lines
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    # Change axis line
+    axis.line = element_line(colour = "black")
+  ) +
+  labs(y="reasoning", x = "V02peak_log") +
+  stat_smooth(method = "lm", col = "#cc8400")
+
+library(ggplot2)
+TBI$AVPOS_change <- as.numeric(TBI$AVPOS_change)
+# a basic plot to plot linear regression results, colour coding the dots and lines
+ggplot(case, aes(x = AD_19, y = RAVLTlearnt_12m)) + 
+  geom_point(color = "#d95f0e") + 
+  theme(
+    # Hide panel borders and remove grid lines
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    # Change axis line
+    axis.line = element_line(colour = "black")
+  ) +
+  labs(y="RAVLT Delayed Recall at 12 months post injury", x = "Axial Diffusivity") +
+  stat_smooth(method = "lm", col = "#d95f0e")
+
+#Same as plot above but for interaciton effects (colour codes dots per a categorical varibale and plots separate lines)
+library(ggplot2)
+ggplot(df_filtered, aes(x = ISI_total_score_base, y = AD_19)) + 
+  geom_point(aes(color = factor(case_control))) + 
+  theme(
+    # Hide panel borders and remove grid lines
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    # Change axis line
+    axis.line = element_line(colour = "black")
+  ) +
+  labs(y="Axial Diffusivity", x = "ISI score at Baseline") +
+  stat_smooth(method = "lm", aes(color = factor(case_control))) +
+  scale_color_manual(values = c("#2c7fb8", "#d95f0e"), 
+                     labels = c("No TBI", "TBI"))
+```
+
+
+```{r pressure, echo=FALSE}
+ggplot(data_adni, aes(x = PSQI, y = AD_anterior_internal_cap_l)) +
+  geom_point(aes(color = factor(TBI))) +
+  theme(
+    # Hide panel borders and remove grid lines
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    # Change axis line
+    axis.line = element_line(colour = "black")
+  ) +
+  labs(y = "Axial Diffusivity", x = "Sleep Disturbances") +
+  stat_smooth(method = "lm", aes(color = factor(TBI))) +
+  scale_color_manual(values = c("#2c7fb8", "#d95f0e"), 
+                     labels = c("No TBI", "TBI"))
+
+# A box plot for two groups based on e.g Gender 
+library(ggplot2)
+ggplot(df_filtered, aes(group=case_control, x=case_control, y=AD_19, case_control)) +
+  geom_point(aes(color = factor(case_control))) + 
+  geom_boxplot(aes(color = factor(case_control))) + 
+  theme_classic() +
+  labs(y="Axial Diffusivity in AIC (L)", x = "Group") +
+  scale_color_manual(values = c("#2c7fb8", "#d95f0e"), 
+                     labels = c("No TBI", "TBI"))
+
+ggplot(mtcars, aes(x = mpg, y = drat)) +
+  geom_point(color = "56B4E9")
+
+geom_point(aes(color = factor(V02max$Sexo))) #for cat split 
+
+# boxx plots for means of n=x groups 
+library("ggpubr")
+ggboxplot(IPL_long_mid, x = "scout", y = "current", 
+          color = "scout", palette = c("#81d8d0", "#1e90ff", "#ff8c00", "#800080", "#ffbf00", "#808080"),
+          ylab = "current", xlab = "scout")
+
+#order = c("ctrl", "trt1", "trt2"),
+#c("#00AFBB", "#E7B800", "#FC4E07", ),
+
+#cMf  = #81d8d0
+#mPFC = #1e90ff
+#sFr = #ff8c00
+#m1 = #808080
+#IPL = #ffbf00
+#sPa= #800080
+
+# colour palletes and color codes 
+
+library(wesanderson)
+pal <- wes_palette("Darjeeling1")
+  
+#skyish blue "#56B4E9"
+#Orange "#E69F00"
+#reddish #d21e2d
+#teal "#1ed2c3"
+#pink #d21e87
+#green #1ed269
+#rebecca purple #663399
+#dirty orange #cc8400
+# red #d21e2d
+#BR green #007542
+# burgendy #7500
+# green/blue #81d8d0
+
+
+```
+
+```
