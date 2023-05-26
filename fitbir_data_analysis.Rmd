@@ -43,7 +43,7 @@ control <- subset(df_fitbir, case_control=="Control")
 df_filtered <- df_fitbir[complete.cases(df_fitbir$case_control), ]
 ```
 
-
+#19=left anterior internal capsule
 ```{r}
 #difference between case vs control
 summary(lm(df_fitbir$AD_19 ~ df_fitbir$case_control + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
@@ -73,6 +73,8 @@ summary(lm(case$AD_19 ~ case$RAVLTlearnt_6m + case$SES + case$educ + case$age + 
 summary(lm(case$AD_19 ~ case$RAVLTlearnt_12m + case$SES + case$educ + case$age + case$sex))
 
 ```
+```
+
 
 
 
@@ -217,4 +219,3 @@ pal <- wes_palette("Darjeeling1")
 
 ```
 
-```
