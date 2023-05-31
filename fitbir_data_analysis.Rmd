@@ -199,6 +199,19 @@ prop.test(x = c(28, 133), n = c(85, 374))
 
 ```
 
+#PWR analysis
+```{r}
+#f2=R2/1-R2
+#pwr test for interaction baseline ISI and AxD AIC (L)
+pwr.f2.test(u=8,v=231,f2=0.09/(1-0.09),sig.level=0.05)
+#pwr test for interaction 3 mo ISI and AxD AIC (L)
+pwr.f2.test(u=8,v=231,f2=0.08/(1-0.08),sig.level=0.05)
+#pwr test for interaction 6 mo ISI and AxD AIC (L)
+pwr.f2.test(u=8,v=231,f2=0.08/(1-0.08),sig.level=0.05)
+#pwr test for interaction 6 mo DR and AxD AIC (L) cases
+pwr.f2.test(u=6,136,f2=0.08/(1-0.08),sig.level=0.05)
+```
+
 
 
 
