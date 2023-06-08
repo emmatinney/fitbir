@@ -84,13 +84,14 @@ df_fitbir$tbi <- as.numeric(df_fitbir$tbi)
 case <- subset(df_fitbir, tbi=="1")
 control <- subset(df_fitbir, tbi=="0")
 #remove the subjects without any label
-df_filtered <- df_fitbir[complete.cases(df_fitbir$tbi), ]
+df_fitbir <- df_fitbir[complete.cases(df_fitbir$tbi), ]
 df_fitbir$anxiety[is.na(df_fitbir$anxiety)] = 0
 df_fitbir$depression[is.na(df_fitbir$depression)] = 0
 df_fitbir$diabetes_typeI[is.na(df_fitbir$diabetes_typeI)] = 0
 df_fitbir$diabetes_typeII[is.na(df_fitbir$diabetes_typeII)] = 0
 df_fitbir$develop_dis[is.na(df_fitbir$develop_dis)] = 0
 df_fitbir$hypertension[is.na(df_fitbir$hypertension)] = 0
+
 ```
 
 
@@ -101,22 +102,56 @@ pairs.panels(df_fitbir[,c('age', 'sex', 'educ', 'SES')])
 #19=left anterior internal capsule
 ```{r}
 #difference between case vs control
-summary(lm(df_fitbir$AD_19 ~ df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age  + df_fitbir$sex +  df_fitbir$site_numeric))
+summary(lm(df_fitbir$AD_19 ~ df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age  + df_fitbir$sex))
 
-#interaction between case vs control and ISI
-summary(lm(df_fitbir$AD_19 ~ df_fitbir$ISI_total_score_base + df_fitbir$tbi:df_fitbir$ISI_total_score_base + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex +  df_fitbir$site_numeric))
+summary(lm(df_fitbir$AD_18 ~ df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age  + df_fitbir$sex))
 
-summary(lm(df_fitbir$AD_19 ~ df_fitbir$ISI_total_score_three + df_fitbir$tbi:df_fitbir$ISI_total_score_three + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex +  df_fitbir$site_numeric))
+summary(lm(df_fitbir$AD_20 ~ df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age  + df_fitbir$sex))
 
-summary(lm(df_fitbir$AD_19 ~ df_fitbir$ISI_total_score_six + df_fitbir$tbi:df_fitbir$ISI_total_score_six + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex +  df_fitbir$site_numeric))
+summary(lm(df_fitbir$AD_21 ~ df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age  + df_fitbir$sex))
 
-summary(lm(df_fitbir$AD_19 ~ df_fitbir$ISI_total_score_twelve + df_fitbir$tbi:df_fitbir$ISI_total_score_twelve + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex +  df_fitbir$site_numeric))
+#interaction between case vs control and ISI right anterior internal cap
+summary(lm(df_fitbir$AD_18_log ~ df_fitbir$ISI_total_score_base + df_fitbir$tbi:df_fitbir$ISI_total_score_base + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+
+summary(lm(df_fitbir$AD_18_log ~ df_fitbir$ISI_total_score_three + df_fitbir$tbi:df_fitbir$ISI_total_score_three + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex +  df_fitbir$site_numeric))
+
+summary(lm(df_fitbir$AD_18_log ~ df_fitbir$ISI_total_score_six + df_fitbir$tbi:df_fitbir$ISI_total_score_six + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex +  df_fitbir$site_numeric))
+
+summary(lm(df_fitbir$AD_18_log ~ df_fitbir$ISI_total_score_twelve + df_fitbir$tbi:df_fitbir$ISI_total_score_twelve + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex +  df_fitbir$site_numeric))
+
+
+#interaction between case vs control and ISI left anterior internal cap
+summary(lm(df_fitbir$AD_19_log ~ df_fitbir$ISI_total_score_base + df_fitbir$tbi:df_fitbir$ISI_total_score_base + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+
+summary(lm(df_fitbir$AD_19_log ~ df_fitbir$ISI_total_score_three + df_fitbir$tbi:df_fitbir$ISI_total_score_three + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+
+summary(lm(df_fitbir$AD_19_log ~ df_fitbir$ISI_total_score_six + df_fitbir$tbi:df_fitbir$ISI_total_score_six + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+
+summary(lm(df_fitbir$AD_19_log ~ df_fitbir$ISI_total_score_twelve + df_fitbir$tbi:df_fitbir$ISI_total_score_twelve + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+
+#interaction between case vs control and ISI right posterior internal cap
+summary(lm(df_fitbir$AD_20_log ~ df_fitbir$ISI_total_score_base + df_fitbir$tbi:df_fitbir$ISI_total_score_base + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+
+summary(lm(df_fitbir$AD_20_log ~ df_fitbir$ISI_total_score_three + df_fitbir$tbi:df_fitbir$ISI_total_score_three + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+
+summary(lm(df_fitbir$AD_20_log ~ df_fitbir$ISI_total_score_six + df_fitbir$tbi:df_fitbir$ISI_total_score_six + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+
+summary(lm(df_fitbir$AD_20_log ~ df_fitbir$ISI_total_score_twelve + df_fitbir$tbi:df_fitbir$ISI_total_score_twelve + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+
+#interaction between case vs control and ISI left posterior internal cap
+summary(lm(df_fitbir$AD_21_log ~ df_fitbir$ISI_total_score_base + df_fitbir$tbi:df_fitbir$ISI_total_score_base + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+
+summary(lm(df_fitbir$AD_21_log ~ df_fitbir$ISI_total_score_three + df_fitbir$tbi:df_fitbir$ISI_total_score_three + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+
+summary(lm(df_fitbir$AD_21_log ~ df_fitbir$ISI_total_score_six + df_fitbir$tbi:df_fitbir$ISI_total_score_six + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+
+summary(lm(df_fitbir$AD_21_log ~ df_fitbir$ISI_total_score_twelve + df_fitbir$tbi:df_fitbir$ISI_total_score_twelve + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
 
 #correlation between CASES AD AIC_L and ISI
-summary(lm(case$AD_19 ~ case$ISI_total_score_base + case$SES + case$educ + case$age + case$sex  +  case$site_numeric))
-summary(lm(case$AD_19 ~ case$ISI_total_score_three + case$SES + case$educ + case$age + case$sex  +  case$site_numeric))
-summary(lm(case$AD_19 ~ case$ISI_total_score_six + case$SES + case$educ + case$age + case$sex  +  case$site_numeric))
-summary(lm(case$AD_19 ~ case$ISI_total_score_twelve + case$SES + case$educ + case$age + case$sex  +  case$site_numeric))
+summary(lm(case$AD_19_log ~ case$ISI_total_score_base + case$SES + case$educ + case$age + case$sex  +  case$site_numeric))
+summary(lm(case$AD_19_log ~ case$ISI_total_score_three + case$SES + case$educ + case$age + case$sex  +  case$site_numeric))
+summary(lm(case$AD_19_log ~ case$ISI_total_score_six + case$SES + case$educ + case$age + case$sex  +  case$site_numeric))
+summary(lm(case$AD_19_log ~ case$ISI_total_score_twelve + case$SES + case$educ + case$age + case$sex  +  case$site_numeric))
 
 #correlation between CONTROLS AD AIC_L and ISI
 summary(lm(control$AD_19 ~ control$ISI_total_score_base + control$SES + control$educ + control$age + control$sex  +  control$site_numeric))
@@ -270,7 +305,7 @@ ggplot(case, aes(x = AD_19, y = RAVLTlearnt_12m)) +
 
 #Same as plot above but for interaciton effects (colour codes dots per a categorical varibale and plots separate lines)
 library(ggplot2)
-ggplot(df_filtered, aes(x = AD_19, y = ISI_total_score_twelve)) + 
+ggplot(df_fitbir, aes(x = AD_19_log, y = ISI_base_log)) + 
   geom_point(aes(color = factor(case_control))) + 
   theme(
     # Hide panel borders and remove grid lines
@@ -358,4 +393,163 @@ pal <- wes_palette("Darjeeling1")
 
 
 ```
+
+#check for assumptions
+```{r}
+
+df_fitbir$ISI_base_log <- as.numeric(df_fitbir$ISI_base_log)
+
+model <- lm(AD_19_log ~ ISI_base + tbi:ISI_base + tbi + SES + educ + age + sex, data = df_fitbir)
+
+model3 <- lm(AD_19_log ~ ISI_3_log + tbi:ISI_3_log + tbi + SES + educ + age + sex, data = df_fitbir)
+
+model6 <- lm(AD_19_log ~ ISI_6_log + tbi:ISI_6_log + tbi + SES + educ + age + sex, data = df_fitbir)
+
+model12 <- lm(AD_19_log ~ ISI_12_log + tbi:ISI_12_log + tbi + SES + educ + age + sex, data = df_fitbir)
+
+shapiro.test(rstandard(model))
+
+shapiro.test(rstandard(model3))
+
+shapiro.test(rstandard(model6))
+
+shapiro.test(rstandard(model12))
+
+plot(model, which = 1)
+
+diagnostics <- function(x,y) {
+  par(mfrow=c(2,2)) #plots 4 plots to visually check assumptions 
+  plot(lm({{x}} ~ {{y}}))
+}
+#left anterior internal cap
+diagnostics(df_fitbir$AD_19_log, df_fitbir$ISI_total_score_base)
+
+diagnostics(df_fitbir$AD_19_log, df_fitbir$ISI_total_score_three)
+
+diagnostics(df_fitbir$AD_19_log, df_fitbir$ISI_total_score_six)
+
+diagnostics(df_fitbir$AD_19_log, df_fitbir$ISI_total_score_twelve)
+#right anterior internal cap
+diagnostics(df_fitbir$AD_18_log, df_fitbir$ISI_total_score_base)
+
+diagnostics(df_fitbir$AD_18_log, df_fitbir$ISI_total_score_three)
+
+diagnostics(df_fitbir$AD_18_log, df_fitbir$ISI_total_score_six)
+
+diagnostics(df_fitbir$AD_18_log, df_fitbir$ISI_total_score_twelve)
+#left posterior internal cap
+diagnostics(df_fitbir$AD_21_log, df_fitbir$ISI_total_score_base)
+
+diagnostics(df_fitbir$AD_21_log, df_fitbir$ISI_total_score_three)
+
+diagnostics(df_fitbir$AD_21_log, df_fitbir$ISI_total_score_six)
+
+diagnostics(df_fitbir$AD_21_log, df_fitbir$ISI_total_score_twelve)
+#right posterior internal cap
+diagnostics(df_fitbir$AD_20_log, df_fitbir$ISI_total_score_base)
+
+diagnostics(df_fitbir$AD_20_log, df_fitbir$ISI_total_score_three)
+
+diagnostics(df_fitbir$AD_20_log, df_fitbir$ISI_total_score_six)
+
+diagnostics(df_fitbir$AD_20_log, df_fitbir$ISI_total_score_twelve)
+
+hist(case$AD_19)
+
+hist(case$ISI_total_score_base)
+
+hist(control$AD_19)
+
+hist(df_fitbir$ISI_total_score_base)
+
+#transform into log
+df_fitbir$ISI_base_log <- log10(df_fitbir$ISI_total_score_base + 1)
+df_fitbir$ISI_3_log <- log10(df_fitbir$ISI_total_score_three + 1)
+df_fitbir$ISI_6_log <- log10(df_fitbir$ISI_total_score_six + 1)
+df_fitbir$ISI_12_log <- log10(df_fitbir$ISI_total_score_twelve + 1)
+df_fitbir$AD_19_log <- log10(df_fitbir$AD_19)
+df_fitbir$AD_18_log <- log10(df_fitbir$AD_18)
+df_fitbir$AD_20_log <- log10(df_fitbir$AD_20)
+df_fitbir$AD_21_log <- log10(df_fitbir$AD_21)
+
+hist(df_fitbir$AD_19_log)
+hist(df_fitbir$ISI_base_log)
+hist(df_fitbir$ISI_3_log)
+hist(df_fitbir$ISI_6_log)
+hist(df_fitbir$ISI_12_log)
+
+```
+
+#Exploring interactions with continuous predictors in regression models
+```{r}
+install.packages("jtools")
+install.packages("interactions")
+install.packages("huxtable")
+library(jtools) 
+library(interactions) 
+library(huxtable)
+
+df_fitbir$tbi <- as.numeric(df_fitbir$tbi)
+
+model <- lm(ISI_total_score_base ~ AD_19_log + tbi:AD_19_log + tbi + SES + educ + age + sex, data = df_fitbir)
+summ(model)
+model3 <- lm(ISI_total_score_three ~  AD_19_log + tbi:AD_19_log + tbi + SES + educ + age + sex, data = df_fitbir)
+summ(model3)
+
+model6 <- lm(ISI_total_score_six ~ AD_19_log  + tbi:AD_19_log + tbi + SES + educ + age + sex, data = df_fitbir)
+summ(model6)
+
+model12 <- lm(AD_19_log ~ ISI_total_score_twelve + tbi:ISI_total_score_twelve + tbi + SES + educ + age + sex, data = df_fitbir)
+summ(model12)
+
+interact_plot(model, pred = AD_19_log, modx = tbi, partial.residuals = TRUE, interval = TRUE)  + theme_apa()
+
+interact_plot(model3, pred = AD_19_log, modx = tbi, partial.residuals = TRUE, interval = TRUE)  + theme_apa()
+
+interact_plot(model6, pred = AD_19_log, modx = tbi, partial.residuals = TRUE, interval = TRUE)  + theme_apa()
+
+interact_plot(fiti, pred = Illiteracy, modx = Murder,
+              x.label = "Custom X Label", y.label = "Custom Y Label",
+              main.title = "Sample Plot",  legend.main = "Custom Legend Title",
+              colors = "seagreen")
+              
+#Check linearity assumption
+set.seed(99)
+x <- rnorm(n = 241, mean = 9.524444, sd = 7.047758)
+err <- rnorm(n = 241, mean = 0, sd = 4)
+w <- rbinom(n = 241, size = 1, prob = 0.5)
+
+y_1 <- 5 - 4*x - 9*w + 3*w*x + err
+model_1 <- lm(y_1 ~ x * w)
+summ(model_1)
+interact_plot(model_1, pred = x, modx = w, linearity.check = TRUE, 
+              plot.points = TRUE)
+
+#Simple slopes analysis and Johnson-Neyman intervals
+
+ss <- sim_slopes(model, pred = AD_19_log, modx = tbi, johnson_neyman = FALSE, control.fdr = TRUE)
+ss
+plot(ss)  + theme_apa()
+as_huxtable(ss)
+
+ss3 <- sim_slopes(model3, pred = AD_19_log, modx = tbi, johnson_neyman = FALSE, control.fdr = TRUE)
+ss3
+plot(ss3) + theme_apa()
+as_huxtable(ss3)
+
+ss6 <- sim_slopes(model6, pred = AD_19_log, modx = tbi, johnson_neyman = FALSE, control.fdr = TRUE)
+ss6
+as_huxtable(ss6)
+
+plot(ss6) + theme_apa()
+
+johnson_neyman(model, pred = ISI_total_score_base, modx = tbi, alpha = .05)
+
+johnson_neyman(model3, pred = ISI_total_score_three, modx = tbi, alpha = .05)
+
+johnson_neyman(model6, pred = ISI_total_score_six, modx = tbi, alpha = .05)
+
+```
+
+
 
