@@ -12,7 +12,26 @@ library(psych)
 
 all_fitbir <- read_excel("/Users/emmatinney/Library/Mobile Documents/com~apple~CloudDocs/Documents/Northeastern/CCBH_Lab/Projects/fitbir/track_tbi.xlsx")
 dti_fitbir <- read_excel("/Users/emmatinney/Library/Mobile Documents/com~apple~CloudDocs/Documents/Northeastern/CCBH_Lab/Projects/fitbir/fitbir_dti.xlsx")
-df_fitbir <- left_join(dti_fitbir, all_fitbir, by = "id")
+long_track_tbi <- read_excel("~/Documents/Northeastern/CCBH_Lab/Projects/fitbir/track_tbi.xlsx",  
++     sheet = "long")
+df_fitbir <- left_join(long_track_tbi, all_fitbir, by = "id")
+df_fitbir_long <- left_join(dti_fitbir, long_track_tbi, by = "id")
+df_fitbir_long$ISI_all <- as.numeric(df_fitbir_long$ISI_all)
+df_fitbir_long$educ <- as.numeric(df_fitbir_long$educ) 
+df_fitbir_long$SES <- as.numeric(df_fitbir_long$SES) 
+df_fitbir_long$age <- as.numeric(df_fitbir_long$age) 
+df_fitbir_long$sex <- as.numeric(df_fitbir_long$sex) 
+df_fitbir_long$RAVLTlearntall <- as.numeric(df_fitbir_long$RAVLTlearntall) 
+x <- as.factor(df_fitbir_long$case_control)
+levels(x)
+df_fitbir_long$tbi <- df_fitbir_long$case_control
+df_fitbir_long$tbi[x == "Case"] <- 1
+df_fitbir_long$tbi[x == "Control"] <- 0
+df_fitbir_long$tbi <- as.numeric(df_fitbir_long$tbi)
+df_fitbir_long$timepoint <- as.numeric(df_fitbir_long$timepoint)
+case <- subset(df_fitbir_long, tbi=="1")
+control <- subset(df_fitbir_long, tbi=="0")
+
 df_fitbir$gose_baseline <- as.numeric(df_fitbir$gose_baseline)
 df_fitbir$gose_three <- as.numeric(df_fitbir$gose_three)
 df_fitbir$gose_six <- as.numeric(df_fitbir$gose_six)
@@ -111,59 +130,100 @@ summary(lm(df_fitbir$AD_20 ~ df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df
 summary(lm(df_fitbir$AD_21 ~ df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age  + df_fitbir$sex))
 
 #interaction between case vs control and ISI right anterior internal cap
-summary(lm(df_fitbir$AD_18_log ~ df_fitbir$ISI_total_score_base + df_fitbir$tbi:df_fitbir$ISI_total_score_base + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
-
-summary(lm(df_fitbir$AD_18_log ~ df_fitbir$ISI_total_score_three + df_fitbir$tbi:df_fitbir$ISI_total_score_three + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex +  df_fitbir$site_numeric))
-
-summary(lm(df_fitbir$AD_18_log ~ df_fitbir$ISI_total_score_six + df_fitbir$tbi:df_fitbir$ISI_total_score_six + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex +  df_fitbir$site_numeric))
-
-summary(lm(df_fitbir$AD_18_log ~ df_fitbir$ISI_total_score_twelve + df_fitbir$tbi:df_fitbir$ISI_total_score_twelve + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex +  df_fitbir$site_numeric))
+summary(lm(df_fitbir$ISI_total_score_base ~ df_fitbir$AD_18 + df_fitbir$tbi:df_fitbir$AD_18 + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+summary(lm(df_fitbir$ISI_total_score_three ~ df_fitbir$AD_18 + df_fitbir$tbi:df_fitbir$AD_18 + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+summary(lm(df_fitbir$ISI_total_score_six ~ df_fitbir$AD_18 + df_fitbir$tbi:df_fitbir$AD_18 + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+summary(lm(df_fitbir$ISI_total_score_twelve ~ df_fitbir$AD_18 + df_fitbir$tbi:df_fitbir$AD_18 + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
 
 
 #interaction between case vs control and ISI left anterior internal cap
-summary(lm(df_fitbir$AD_19_log ~ df_fitbir$ISI_total_score_base + df_fitbir$tbi:df_fitbir$ISI_total_score_base + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+summary(lm(df_fitbir$ISI_total_score_base ~ df_fitbir$AD_19 + df_fitbir$tbi:df_fitbir$AD_19 + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
 
-summary(lm(df_fitbir$AD_19_log ~ df_fitbir$ISI_total_score_three + df_fitbir$tbi:df_fitbir$ISI_total_score_three + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+summary(lm(df_fitbir$ISI_total_score_three ~ df_fitbir$AD_19 + df_fitbir$tbi:df_fitbir$AD_19 + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
 
-summary(lm(df_fitbir$AD_19_log ~ df_fitbir$ISI_total_score_six + df_fitbir$tbi:df_fitbir$ISI_total_score_six + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+summary(lm(df_fitbir$ISI_total_score_six ~ df_fitbir$AD_19 + df_fitbir$tbi:df_fitbir$AD_19 + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
 
-summary(lm(df_fitbir$AD_19_log ~ df_fitbir$ISI_total_score_twelve + df_fitbir$tbi:df_fitbir$ISI_total_score_twelve + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+summary(lm(df_fitbir$ISI_total_score_twelve ~ df_fitbir$AD_19 + df_fitbir$tbi:df_fitbir$AD_19 + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
 
 #interaction between case vs control and ISI right posterior internal cap
-summary(lm(df_fitbir$AD_20_log ~ df_fitbir$ISI_total_score_base + df_fitbir$tbi:df_fitbir$ISI_total_score_base + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+summary(lm(df_fitbir$ISI_total_score_base ~ df_fitbir$AD_20 + df_fitbir$tbi:df_fitbir$AD_20 + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+summary(lm(df_fitbir$ISI_total_score_three ~ df_fitbir$AD_20 + df_fitbir$tbi:df_fitbir$AD_20 + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+summary(lm(df_fitbir$ISI_total_score_six ~ df_fitbir$AD_20 + df_fitbir$tbi:df_fitbir$AD_20 + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+summary(lm(df_fitbir$ISI_total_score_twelve ~ df_fitbir$AD_20 + df_fitbir$tbi:df_fitbir$AD_20 + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
 
-summary(lm(df_fitbir$AD_20_log ~ df_fitbir$ISI_total_score_three + df_fitbir$tbi:df_fitbir$ISI_total_score_three + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
-
-summary(lm(df_fitbir$AD_20_log ~ df_fitbir$ISI_total_score_six + df_fitbir$tbi:df_fitbir$ISI_total_score_six + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
-
-summary(lm(df_fitbir$AD_20_log ~ df_fitbir$ISI_total_score_twelve + df_fitbir$tbi:df_fitbir$ISI_total_score_twelve + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
 
 #interaction between case vs control and ISI left posterior internal cap
-summary(lm(df_fitbir$AD_21_log ~ df_fitbir$ISI_total_score_base + df_fitbir$tbi:df_fitbir$ISI_total_score_base + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+summary(lm(df_fitbir$ISI_total_score_base ~ df_fitbir$AD_21 + df_fitbir$tbi:df_fitbir$AD_21 + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+summary(lm(df_fitbir$ISI_total_score_three ~ df_fitbir$AD_21 + df_fitbir$tbi:df_fitbir$AD_21 + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+summary(lm(df_fitbir$ISI_total_score_six ~ df_fitbir$AD_21 + df_fitbir$tbi:df_fitbir$AD_21 + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+summary(lm(df_fitbir$ISI_total_score_twelve ~ df_fitbir$AD_21 + df_fitbir$tbi:df_fitbir$AD_21 + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
 
-summary(lm(df_fitbir$AD_21_log ~ df_fitbir$ISI_total_score_three + df_fitbir$tbi:df_fitbir$ISI_total_score_three + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+#correlation between CASES AD AIC_R and ISI
+summary(lm(case$ISI_total_score_base ~ case$AD_18 + case$SES + case$educ + case$age + case$sex))
+summary(lm(case$ISI_total_score_three ~ case$AD_18 + case$SES + case$educ + case$age + case$sex))
+summary(lm(case$ISI_total_score_six ~ case$AD_18 + case$SES + case$educ + case$age + case$sex))
+summary(lm(case$ISI_total_score_twelve ~ case$AD_18 + case$SES + case$educ + case$age + case$sex))
 
-summary(lm(df_fitbir$AD_21_log ~ df_fitbir$ISI_total_score_six + df_fitbir$tbi:df_fitbir$ISI_total_score_six + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
-
-summary(lm(df_fitbir$AD_21_log ~ df_fitbir$ISI_total_score_twelve + df_fitbir$tbi:df_fitbir$ISI_total_score_twelve + df_fitbir$tbi + df_fitbir$SES + df_fitbir$educ + df_fitbir$age + df_fitbir$sex))
+#correlation between CONTROLS AD AIC_R and ISI
+summary(lm(ISI_total_score_base ~ AD_18 + SES + educ + age + sex, data=control))
+summary(lm(ISI_total_score_three ~ AD_18 + SES + educ + age + sex, data=control))
+summary(lm(ISI_total_score_six ~ AD_18 + SES + educ + age + sex, data=control))
+summary(lm(ISI_total_score_twelve ~ AD_18 + SES + educ + age + sex, data=control))
 
 #correlation between CASES AD AIC_L and ISI
-summary(lm(case$AD_19_log ~ case$ISI_total_score_base + case$SES + case$educ + case$age + case$sex  +  case$site_numeric))
-summary(lm(case$AD_19_log ~ case$ISI_total_score_three + case$SES + case$educ + case$age + case$sex  +  case$site_numeric))
-summary(lm(case$AD_19_log ~ case$ISI_total_score_six + case$SES + case$educ + case$age + case$sex  +  case$site_numeric))
-summary(lm(case$AD_19_log ~ case$ISI_total_score_twelve + case$SES + case$educ + case$age + case$sex  +  case$site_numeric))
+summary(lm(case$ISI_total_score_base ~ case$AD_19 + case$SES + case$educ + case$age + case$sex))
+summary(lm(case$ISI_total_score_three ~ case$AD_19 + case$SES + case$educ + case$age + case$sex))
+summary(lm(case$ISI_total_score_six ~ case$AD_19 + case$SES + case$educ + case$age + case$sex))
+summary(lm(case$ISI_total_score_twelve ~ case$AD_19 + case$SES + case$educ + case$age + case$sex))
 
 #correlation between CONTROLS AD AIC_L and ISI
-summary(lm(control$AD_19 ~ control$ISI_total_score_base + control$SES + control$educ + control$age + control$sex  +  control$site_numeric))
-summary(lm(control$AD_19 ~ control$ISI_total_score_three + control$SES + control$educ + control$age + control$sex +  control$site_numeric))
-summary(lm(control$AD_19 ~ control$ISI_total_score_six + control$SES + control$educ + control$age + control$sex +  control$site_numeric))
-summary(lm(control$AD_19 ~ control$ISI_total_score_twelve + control$SES + control$educ + control$age + control$sex +  control$site_numeric))
+summary(lm(ISI_total_score_base ~ AD_19 + SES + educ + age + sex, data=control))
+summary(lm(ISI_total_score_three ~ AD_19 + SES + educ + age + sex, data=control))
+summary(lm(ISI_total_score_six ~ AD_19 + SES + educ + age + sex, data=control))
+summary(lm(ISI_total_score_twelve ~ AD_19 + SES + educ + age + sex, data=control))
 
+#correlation between CASES AD PIC_R and ISI
+summary(lm(case$ISI_total_score_base ~ case$AD_20 + case$SES + case$educ + case$age + case$sex))
+summary(lm(case$ISI_total_score_three ~ case$AD_20 + case$SES + case$educ + case$age + case$sex))
+summary(lm(case$ISI_total_score_six ~ case$AD_20 + case$SES + case$educ + case$age + case$sex))
+summary(lm(case$ISI_total_score_twelve ~ case$AD_20 + case$SES + case$educ + case$age + case$sex))
 
+#correlation between CONTROLS AD PIC_R and ISI
+summary(lm(ISI_total_score_base ~ AD_20 + SES + educ + age + sex, data=control))
+summary(lm(ISI_total_score_three ~ AD_20 + SES + educ + age + sex, data=control))
+summary(lm(ISI_total_score_six ~ AD_20 + SES + educ + age + sex, data=control))
+summary(lm(ISI_total_score_twelve ~ AD_20 + SES + educ + age + sex, data=control))
+
+#correlation between CASES AD PIC_L and ISI
+summary(lm(case$ISI_total_score_base ~ case$AD_21 + case$SES + case$educ + case$age + case$sex))
+summary(lm(case$ISI_total_score_three ~ case$AD_21 + case$SES + case$educ + case$age + case$sex))
+summary(lm(case$ISI_total_score_six ~ case$AD_21 + case$SES + case$educ + case$age + case$sex))
+summary(lm(case$ISI_total_score_twelve ~ case$AD_21 + case$SES + case$educ + case$age + case$sex))
+
+#correlation between CONTROLS AD PIC_L and ISI
+summary(lm(ISI_total_score_base ~ AD_21 + SES + educ + age + sex, data=control))
+summary(lm(ISI_total_score_three ~ AD_21 + SES + educ + age + sex, data=control))
+summary(lm(ISI_total_score_six ~ AD_21 + SES + educ + age + sex, data=control))
+summary(lm(ISI_total_score_twelve ~ AD_21 + SES + educ + age + sex, data=control))
 #correlation between cases AD AIC_L and ravlt
-summary(lm(case$AD_19 ~ case$RAVLTlearnt2 + case$SES + case$educ + case$age + case$sex +  case$site_numeric))
-summary(lm(case$AD_19 ~ case$RAVLTlearnt_6m + case$SES + case$educ + case$age + case$sex +  case$site_numeric))
-summary(lm(case$AD_19 ~ case$RAVLTlearnt_12m + case$SES + case$educ + case$age + case$sex +  case$site_numeric))
+summary(lm(case$AD_19 ~ case$RAVLTlearnt2 + case$SES + case$educ + case$age + case$sex))
+summary(lm(case$AD_19 ~ case$RAVLTlearnt_6m + case$SES + case$educ + case$age + case$sex))
+summary(lm(case$AD_19 ~ case$RAVLTlearnt_12m + case$SES + case$educ + case$age + case$sex))
+
+#correlation between cases AD AIC_R and ravlt
+summary(lm(case$AD_18 ~ case$RAVLTlearnt2 + case$SES + case$educ + case$age + case$sex))
+summary(lm(case$AD_18 ~ case$RAVLTlearnt_6m + case$SES + case$educ + case$age + case$sex))
+summary(lm(case$AD_18 ~ case$RAVLTlearnt_12m + case$SES + case$educ + case$age + case$sex))
+
+#correlation between cases AD AIC_R and ravlt
+summary(lm(case$AD_20 ~ case$RAVLTlearnt2 + case$SES + case$educ + case$age + case$sex))
+summary(lm(case$AD_20 ~ case$RAVLTlearnt_6m + case$SES + case$educ + case$age + case$sex))
+summary(lm(case$AD_20 ~ case$RAVLTlearnt_12m + case$SES + case$educ + case$age + case$sex))
+
+#correlation between cases AD AIC_R and ravlt
+summary(lm(case$AD_21 ~ case$RAVLTlearnt2 + case$SES + case$educ + case$age + case$sex))
+summary(lm(case$AD_21 ~ case$RAVLTlearnt_6m + case$SES + case$educ + case$age + case$sex))
+summary(lm(case$AD_21 ~ case$RAVLTlearnt_12m + case$SES + case$educ + case$age + case$sex))
 
 ```
 ```
@@ -286,10 +346,24 @@ ggplot(fitcog_55, aes(x = fitcog_55$crf_log, y = fitcog_55$reasoning_VS_PCA)) +
   labs(y="reasoning", x = "V02peak_log") +
   stat_smooth(method = "lm", col = "#cc8400")
 
+ggplot(case, aes(x = timepoint, y = RAVLTlearntall)) + 
+  geom_point(color =  "#663399") +
+  theme(
+    # Hide panel borders and remove grid lines
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    # Change axis line
+    axis.line = element_line(colour = "black")
+  ) +
+  labs(y="RAVLT delayed recall", x = "timepoint") +
+  stat_smooth(method = "lm", col = "#cc8400")
+
 library(ggplot2)
 TBI$AVPOS_change <- as.numeric(TBI$AVPOS_change)
 # a basic plot to plot linear regression results, colour coding the dots and lines
-ggplot(case, aes(x = AD_19, y = RAVLTlearnt_12m)) + 
+ggplot(case, aes(x = AD_19, y = RAVLTlearnt_6m)) + 
   geom_point(color = "#d95f0e") + 
   theme(
     # Hide panel borders and remove grid lines
@@ -300,12 +374,13 @@ ggplot(case, aes(x = AD_19, y = RAVLTlearnt_12m)) +
     # Change axis line
     axis.line = element_line(colour = "black")
   ) +
-  labs(y="RAVLT Delayed Recall at 12 months post injury", x = "Axial Diffusivity") +
+  labs(y="RAVLT Delayed Recall at 6 months post injury", x = "Axial Diffusivity") +
+  theme_apa() +
   stat_smooth(method = "lm", col = "#d95f0e")
 
 #Same as plot above but for interaciton effects (colour codes dots per a categorical varibale and plots separate lines)
 library(ggplot2)
-ggplot(df_fitbir, aes(x = AD_19_log, y = ISI_base_log)) + 
+ggplot(df_fitbir, aes(x = AD_19, y = ISI_base)) + 
   geom_point(aes(color = factor(case_control))) + 
   theme(
     # Hide panel borders and remove grid lines
@@ -397,15 +472,15 @@ pal <- wes_palette("Darjeeling1")
 #check for assumptions
 ```{r}
 
-df_fitbir$ISI_base_log <- as.numeric(df_fitbir$ISI_base_log)
+df_fitbir$ISI_base <- as.numeric(df_fitbir$ISI_base)
 
-model <- lm(AD_19_log ~ ISI_base + tbi:ISI_base + tbi + SES + educ + age + sex, data = df_fitbir)
+model <- lm(AD_19 ~ ISI_base + tbi:ISI_base + tbi + SES + educ + age + sex, data = df_fitbir)
 
-model3 <- lm(AD_19_log ~ ISI_3_log + tbi:ISI_3_log + tbi + SES + educ + age + sex, data = df_fitbir)
+model3 <- lm(AD_19 ~ ISI_3 + tbi:ISI_3 + tbi + SES + educ + age + sex, data = df_fitbir)
 
-model6 <- lm(AD_19_log ~ ISI_6_log + tbi:ISI_6_log + tbi + SES + educ + age + sex, data = df_fitbir)
+model6 <- lm(AD_19 ~ ISI_6 + tbi:ISI_6 + tbi + SES + educ + age + sex, data = df_fitbir)
 
-model12 <- lm(AD_19_log ~ ISI_12_log + tbi:ISI_12_log + tbi + SES + educ + age + sex, data = df_fitbir)
+model12 <- lm(AD_19 ~ ISI_12 + tbi:ISI_12 + tbi + SES + educ + age + sex, data = df_fitbir)
 
 shapiro.test(rstandard(model))
 
@@ -422,37 +497,37 @@ diagnostics <- function(x,y) {
   plot(lm({{x}} ~ {{y}}))
 }
 #left anterior internal cap
-diagnostics(df_fitbir$AD_19_log, df_fitbir$ISI_total_score_base)
+diagnostics(df_fitbir$AD_19, df_fitbir$ISI_total_score_base)
 
-diagnostics(df_fitbir$AD_19_log, df_fitbir$ISI_total_score_three)
+diagnostics(df_fitbir$AD_19, df_fitbir$ISI_total_score_three)
 
-diagnostics(df_fitbir$AD_19_log, df_fitbir$ISI_total_score_six)
+diagnostics(df_fitbir$AD_19, df_fitbir$ISI_total_score_six)
 
-diagnostics(df_fitbir$AD_19_log, df_fitbir$ISI_total_score_twelve)
+diagnostics(df_fitbir$AD_19, df_fitbir$ISI_total_score_twelve)
 #right anterior internal cap
-diagnostics(df_fitbir$AD_18_log, df_fitbir$ISI_total_score_base)
+diagnostics(df_fitbir$AD_18, df_fitbir$ISI_total_score_base)
 
-diagnostics(df_fitbir$AD_18_log, df_fitbir$ISI_total_score_three)
+diagnostics(df_fitbir$AD_18, df_fitbir$ISI_total_score_three)
 
-diagnostics(df_fitbir$AD_18_log, df_fitbir$ISI_total_score_six)
+diagnostics(df_fitbir$AD_18, df_fitbir$ISI_total_score_six)
 
-diagnostics(df_fitbir$AD_18_log, df_fitbir$ISI_total_score_twelve)
+diagnostics(df_fitbir$AD_18, df_fitbir$ISI_total_score_twelve)
 #left posterior internal cap
-diagnostics(df_fitbir$AD_21_log, df_fitbir$ISI_total_score_base)
+diagnostics(df_fitbir$AD_21, df_fitbir$ISI_total_score_base)
 
-diagnostics(df_fitbir$AD_21_log, df_fitbir$ISI_total_score_three)
+diagnostics(df_fitbir$AD_21, df_fitbir$ISI_total_score_three)
 
-diagnostics(df_fitbir$AD_21_log, df_fitbir$ISI_total_score_six)
+diagnostics(df_fitbir$AD_21, df_fitbir$ISI_total_score_six)
 
-diagnostics(df_fitbir$AD_21_log, df_fitbir$ISI_total_score_twelve)
+diagnostics(df_fitbir$AD_21, df_fitbir$ISI_total_score_twelve)
 #right posterior internal cap
-diagnostics(df_fitbir$AD_20_log, df_fitbir$ISI_total_score_base)
+diagnostics(df_fitbir$AD_20, df_fitbir$ISI_total_score_base)
 
-diagnostics(df_fitbir$AD_20_log, df_fitbir$ISI_total_score_three)
+diagnostics(df_fitbir$AD_20, df_fitbir$ISI_total_score_three)
 
-diagnostics(df_fitbir$AD_20_log, df_fitbir$ISI_total_score_six)
+diagnostics(df_fitbir$AD_20, df_fitbir$ISI_total_score_six)
 
-diagnostics(df_fitbir$AD_20_log, df_fitbir$ISI_total_score_twelve)
+diagnostics(df_fitbir$AD_20, df_fitbir$ISI_total_score_twelve)
 
 hist(case$AD_19)
 
@@ -491,22 +566,24 @@ library(huxtable)
 
 df_fitbir$tbi <- as.numeric(df_fitbir$tbi)
 
-model <- lm(ISI_total_score_base ~ AD_19_log + tbi:AD_19_log + tbi + SES + educ + age + sex, data = df_fitbir)
+model <- lm(ISI_total_score_base ~ AD_19 + tbi:AD_19 + tbi + SES + educ + age + sex, data = df_fitbir)
 summ(model)
-model3 <- lm(ISI_total_score_three ~  AD_19_log + tbi:AD_19_log + tbi + SES + educ + age + sex, data = df_fitbir)
+model3 <- lm(ISI_total_score_three ~  AD_19 + tbi:AD_19 + tbi + SES + educ + age + sex, data = df_fitbir)
 summ(model3)
 
-model6 <- lm(ISI_total_score_six ~ AD_19_log  + tbi:AD_19_log + tbi + SES + educ + age + sex, data = df_fitbir)
+model6 <- lm(ISI_total_score_six ~ AD_19  + tbi:AD_19 + tbi + SES + educ + age + sex, data = df_fitbir)
 summ(model6)
 
-model12 <- lm(AD_19_log ~ ISI_total_score_twelve + tbi:ISI_total_score_twelve + tbi + SES + educ + age + sex, data = df_fitbir)
+model12 <- lm( ~ ISI_total_score_twelve + tbi:AD_19 + tbi + SES + educ + age + sex, data = df_fitbir)
 summ(model12)
 
-interact_plot(model, pred = AD_19_log, modx = tbi, partial.residuals = TRUE, interval = TRUE)  + theme_apa()
+interact_plot(model, pred = AD_19, modx = tbi, partial.residuals = TRUE, interval = TRUE)  + theme_apa()
 
-interact_plot(model3, pred = AD_19_log, modx = tbi, partial.residuals = TRUE, interval = TRUE)  + theme_apa()
+interact_plot(model3, pred = AD_19, modx = tbi, partial.residuals = TRUE, interval = TRUE)  + theme_apa()
 
-interact_plot(model6, pred = AD_19_log, modx = tbi, partial.residuals = TRUE, interval = TRUE)  + theme_apa()
+interact_plot(model6, pred = AD_19, modx = tbi, partial.residuals = TRUE, interval = TRUE)  + theme_apa()
+
+interact_plot(model12, pred = AD_19, modx = tbi, partial.residuals = TRUE, interval = TRUE)  + theme_apa()
 
 interact_plot(fiti, pred = Illiteracy, modx = Murder,
               x.label = "Custom X Label", y.label = "Custom Y Label",
@@ -527,17 +604,17 @@ interact_plot(model_1, pred = x, modx = w, linearity.check = TRUE,
 
 #Simple slopes analysis and Johnson-Neyman intervals
 
-ss <- sim_slopes(model, pred = AD_19_log, modx = tbi, johnson_neyman = FALSE, control.fdr = TRUE)
+ss <- sim_slopes(model, pred = AD_19, modx = tbi, johnson_neyman = FALSE, control.fdr = TRUE)
 ss
 plot(ss)  + theme_apa()
 as_huxtable(ss)
 
-ss3 <- sim_slopes(model3, pred = AD_19_log, modx = tbi, johnson_neyman = FALSE, control.fdr = TRUE)
+ss3 <- sim_slopes(model3, pred = AD_19, modx = tbi, johnson_neyman = FALSE, control.fdr = TRUE)
 ss3
 plot(ss3) + theme_apa()
 as_huxtable(ss3)
 
-ss6 <- sim_slopes(model6, pred = AD_19_log, modx = tbi, johnson_neyman = FALSE, control.fdr = TRUE)
+ss6 <- sim_slopes(model6, pred = AD_19, modx = tbi, johnson_neyman = FALSE, control.fdr = TRUE)
 ss6
 as_huxtable(ss6)
 
@@ -548,6 +625,39 @@ johnson_neyman(model, pred = ISI_total_score_base, modx = tbi, alpha = .05)
 johnson_neyman(model3, pred = ISI_total_score_three, modx = tbi, alpha = .05)
 
 johnson_neyman(model6, pred = ISI_total_score_six, modx = tbi, alpha = .05)
+
+```
+#3 way interaction
+```{r}
+#cog ~ time + AD + sleep + timexAD + timexsleep + sleepxAD + timexADxsleep
+case$timepoint <- as.numeric(case$timepoint)
+summary(lm(RAVLTlearntall ~ AD_19 + timepoint + ISI_all:AD_19 + timepoint:ISI_all + timepoint:AD_19 + timepoint:AD_19:ISI_all + SES + educ + age + sex, data=case))
+
+summary(lm(RAVLTlearntall ~ AD_18 + timepointl + ISI_al:AD_18 + timepoint:ISI_all + ISI_all:AD_18 + timepoint:AD_18:ISI_all + SES + educ + age + sex, data=case))
+
+summary(lm(RAVLTlearntall ~ AD_20 + ISI_all + timepoint:AD_20 + timepoint:ISI_all + ISI_all:AD_20 + timepoint:AD_20:ISI_all + SES + educ + age + sex, data=case))
+
+summary(lm(RAVLTlearntall ~ AD_21 + ISI_all + timepoint:AD_21 + timepoint:ISI_all + ISI_all:AD_21 + timepoint:AD_21:ISI_all + SES + educ + age + sex, data=case))
+
+fita3 <- lm(RAVLTlearntall ~ AD_19 + timepoint + ISI_all:AD_19 + timepoint:ISI_all + ISI_all:AD_19 + timepoint:AD_19:ISI_all + SES + educ + age + sex, data=case)
+
+probe_interaction(fita3, pred = timepoint, modx = ISI_all, mod2 = AD_19,
+                  alpha = .1)
+                  
+
+fita3 <- lm(ISI_all ~ AD_19 + timepoint + tbi:AD_19 + timepoint:tbi + tbi:AD_19 + timepoint:AD_19:tbi + SES + educ + age + sex, data=df_fitbir_long)
+summary(fita3)
+
+probe_interaction(fita3, pred = timepoint, modx = tbi, mod2 = AD_19,
+                  alpha = .1)
+                  
+  
+summary(lm(RAVLTlearntall ~ AD_19 + timepoint + SES + educ + age + sex + AD_19:timepoint, data=case))
+fita3 <- lm(RAVLTlearntall ~ ISI_all + timepoint + SES + educ + age + sex + ISI_all:timepoint, data=case)
+
+probe_interaction(fita3, pred = timepoint, modx = AD_19,
+                  alpha = .1)
+                  
 
 ```
 
