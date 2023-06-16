@@ -12,8 +12,7 @@ library(psych)
 
 all_fitbir <- read_excel("/Users/emmatinney/Library/Mobile Documents/com~apple~CloudDocs/Documents/Northeastern/CCBH_Lab/Projects/fitbir/track_tbi.xlsx")
 dti_fitbir <- read_excel("/Users/emmatinney/Library/Mobile Documents/com~apple~CloudDocs/Documents/Northeastern/CCBH_Lab/Projects/fitbir/fitbir_dti.xlsx")
-long_track_tbi <- read_excel("~/Documents/Northeastern/CCBH_Lab/Projects/fitbir/track_tbi.xlsx",  
-+     sheet = "long")
+long_track_tbi <- read_excel("~/Documents/Northeastern/CCBH_Lab/Projects/fitbir/track_tbi.xlsx", sheet = "long")
 df_fitbir <- left_join(long_track_tbi, all_fitbir, by = "id")
 df_fitbir_long <- left_join(dti_fitbir, long_track_tbi, by = "id")
 df_fitbir_long$ISI_all <- as.numeric(df_fitbir_long$ISI_all)
@@ -31,6 +30,7 @@ df_fitbir_long$tbi <- as.numeric(df_fitbir_long$tbi)
 df_fitbir_long$timepoint <- as.numeric(df_fitbir_long$timepoint)
 case <- subset(df_fitbir_long, tbi=="1")
 control <- subset(df_fitbir_long, tbi=="0")
+df_fitbir <- left_join(dti_fitbir, all_fitbir, by = "id")
 
 df_fitbir$gose_baseline <- as.numeric(df_fitbir$gose_baseline)
 df_fitbir$gose_three <- as.numeric(df_fitbir$gose_three)
@@ -215,12 +215,12 @@ summary(lm(case$AD_18 ~ case$RAVLTlearnt2 + case$SES + case$educ + case$age + ca
 summary(lm(case$AD_18 ~ case$RAVLTlearnt_6m + case$SES + case$educ + case$age + case$sex))
 summary(lm(case$AD_18 ~ case$RAVLTlearnt_12m + case$SES + case$educ + case$age + case$sex))
 
-#correlation between cases AD AIC_R and ravlt
+#correlation between cases AD PIC_R and ravlt
 summary(lm(case$AD_20 ~ case$RAVLTlearnt2 + case$SES + case$educ + case$age + case$sex))
 summary(lm(case$AD_20 ~ case$RAVLTlearnt_6m + case$SES + case$educ + case$age + case$sex))
 summary(lm(case$AD_20 ~ case$RAVLTlearnt_12m + case$SES + case$educ + case$age + case$sex))
 
-#correlation between cases AD AIC_R and ravlt
+#correlation between cases AD PIC_R and ravlt
 summary(lm(case$AD_21 ~ case$RAVLTlearnt2 + case$SES + case$educ + case$age + case$sex))
 summary(lm(case$AD_21 ~ case$RAVLTlearnt_6m + case$SES + case$educ + case$age + case$sex))
 summary(lm(case$AD_21 ~ case$RAVLTlearnt_12m + case$SES + case$educ + case$age + case$sex))
