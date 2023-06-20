@@ -9,6 +9,7 @@ library(rlang)
 library(ggplot2)
 library(dplyr)
 library(psych)
+library(nlme)
 
 all_fitbir <- read_excel("/Users/emmatinney/Library/Mobile Documents/com~apple~CloudDocs/Documents/Northeastern/CCBH_Lab/Projects/fitbir/track_tbi.xlsx")
 dti_fitbir <- read_excel("/Users/emmatinney/Library/Mobile Documents/com~apple~CloudDocs/Documents/Northeastern/CCBH_Lab/Projects/fitbir/fitbir_dti.xlsx")
@@ -639,6 +640,10 @@ johnson_neyman(model6, pred = ISI_total_score_six, modx = tbi, alpha = .05)
 ```{r}
 #cog ~ time + AD + sleep + timexAD + timexsleep + sleepxAD + timexADxsleep
 case$timepoint <- as.numeric(case$timepoint)
+summary(lm(AD_19 ~ age  + SES + educ + sex, data=case))
+
+hist(case$age)
+
 summary(lm(RAVLTlearntall ~ AD_19 + timepoint + ISI_all:AD_19 + timepoint:ISI_all + timepoint:AD_19 + timepoint:AD_19:ISI_all + SES + educ + age + sex, data=case))
 
 summary(lm(RAVLTlearntall ~ AD_18 + timepoint + ISI_al:AD_18 + timepoint:ISI_all + ISI_all:AD_18 + timepoint:AD_18:ISI_all + SES + educ + age + sex, data=case))
@@ -666,6 +671,11 @@ fita3 <- lm(RAVLTlearntall ~ ISI_all + timepoint + SES + educ + age + sex + ISI_
 probe_interaction(fita3, pred = timepoint, modx = AD_19,
                   alpha = .1)
                   
+fitRandomInterceptSlope <- lme(RAVLTlearntall ~ AD_19*timepoint,random=~1|id, data=na.omit(dft))
+summary(fitRandomInterceptSlope)
+
+dft <- case %>% 
+filter(timepoint < 3)
 
 ```
 #WMH
