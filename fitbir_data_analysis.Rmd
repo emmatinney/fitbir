@@ -13,8 +13,11 @@ library(psych)
 all_fitbir <- read_excel("/Users/emmatinney/Library/Mobile Documents/com~apple~CloudDocs/Documents/Northeastern/CCBH_Lab/Projects/fitbir/track_tbi.xlsx")
 dti_fitbir <- read_excel("/Users/emmatinney/Library/Mobile Documents/com~apple~CloudDocs/Documents/Northeastern/CCBH_Lab/Projects/fitbir/fitbir_dti.xlsx")
 long_track_tbi <- read_excel("~/Documents/Northeastern/CCBH_Lab/Projects/fitbir/track_tbi.xlsx", sheet = "long")
+wmh <- read_excel("~/Documents/Northeastern/CCBH_Lab/Projects/fitbir/LST_run1.xlsx")
+wmh_fitbir <- left_join(wmh, all_fitbir, by = "id")
 df_fitbir <- left_join(long_track_tbi, all_fitbir, by = "id")
 df_fitbir_long <- left_join(dti_fitbir, long_track_tbi, by = "id")
+df_fitbir <- wmh_fitbir
 df_fitbir_long$ISI_all <- as.numeric(df_fitbir_long$ISI_all)
 df_fitbir_long$educ <- as.numeric(df_fitbir_long$educ) 
 df_fitbir_long$SES <- as.numeric(df_fitbir_long$SES) 
@@ -571,6 +574,7 @@ summ(model)
 model3 <- lm(ISI_total_score_three ~  AD_19 + tbi:AD_19 + tbi + SES + educ + age + sex, data = df_fitbir)
 summ(model3)
 
+
 model6 <- lm(ISI_total_score_six ~ AD_19  + tbi:AD_19 + tbi + SES + educ + age + sex, data = df_fitbir)
 summ(model6)
 
@@ -589,7 +593,11 @@ interact_plot(fiti, pred = Illiteracy, modx = Murder,
               x.label = "Custom X Label", y.label = "Custom Y Label",
               main.title = "Sample Plot",  legend.main = "Custom Legend Title",
               colors = "seagreen")
-              
+sim_slopes(model, pred = AD_19, modx = tbi, control.fdr=TRUE)
+sim_slopes(model3, pred = AD_19, modx = tbi, control.fdr=TRUE)
+sim_slopes(model6, pred = AD_19, modx = tbi, control.fdr=TRUE)
+sim_slopes(model12, pred = AD_19, modx = tbi, control.fdr=TRUE)
+
 #Check linearity assumption
 set.seed(99)
 x <- rnorm(n = 241, mean = 9.524444, sd = 7.047758)
@@ -658,6 +666,18 @@ fita3 <- lm(RAVLTlearntall ~ ISI_all + timepoint + SES + educ + age + sex + ISI_
 probe_interaction(fita3, pred = timepoint, modx = AD_19,
                   alpha = .1)
                   
+
+```
+#WMH
+```{r}
+t.test(control$TLV, case$TLV)
+t.test(control$N, case$N)
+
+summary(lm(TLV ~ sex + SES + educ + age, data = case))
+
+summary(lm(TLV ~ ISI_total_score_six + SES + educ + age + sex, data = case))
+
+
 
 ```
 
