@@ -640,7 +640,7 @@ johnson_neyman(model6, pred = ISI_total_score_six, modx = tbi, alpha = .05)
 #cog ~ time + AD + sleep + timexAD + timexsleep + sleepxAD + timexADxsleep
 case$timepoint <- as.numeric(case$timepoint)
 summary(lm(RAVLTlearntall ~ AD_19 + timepoint + ISI_all:AD_19 + timepoint:ISI_all + timepoint:AD_19 + timepoint:AD_19:ISI_all + SES + educ + age + sex, data=case))
-change
+
 summary(lm(RAVLTlearntall ~ AD_18 + timepoint + ISI_al:AD_18 + timepoint:ISI_all + ISI_all:AD_18 + timepoint:AD_18:ISI_all + SES + educ + age + sex, data=case))
 
 summary(lm(RAVLTlearntall ~ AD_20 + ISI_all + timepoint:AD_20 + timepoint:ISI_all + ISI_all:AD_20 + timepoint:AD_20:ISI_all + SES + educ + age + sex, data=case))
