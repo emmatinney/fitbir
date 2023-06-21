@@ -584,6 +584,7 @@ summ(model12)
 
 interact_plot(model, pred = AD_19, modx = tbi, partial.residuals = TRUE, interval = TRUE)  + theme_apa()
 
+
 interact_plot(model3, pred = AD_19, modx = tbi, partial.residuals = TRUE, interval = TRUE)  + theme_apa()
 
 interact_plot(model6, pred = AD_19, modx = tbi, partial.residuals = TRUE, interval = TRUE)  + theme_apa()
@@ -676,6 +677,45 @@ summary(fitRandomInterceptSlope)
 
 dft <- case %>% 
 filter(timepoint < 3)
+case['age_category'] = ''
+
+case$age_category[case$age < 30] <- "1"
+case$age_category[case$age >= 30 & case$age <= 60] <- "2"
+case$age_category[case$age > 60 & case$age <= 90] <- "3"
+
+
+young <- dft %>% 
+filter(age < 30)
+fitRandomInterceptSlope <- lme(RAVLTlearntall ~ AD_19*timepoint + SES + educ + age + sex,random=~1|id, data=na.omit(young))
+summary(fitRandomInterceptSlope)
+
+
+mid <- dft %>% 
+filter(age < 60, age > 29)
+fitRandomInterceptSlope <- lme(RAVLTlearntall ~ AD_19*timepoint + SES + educ + age + sex,random=~1|id, data=na.omit(mid))
+summary(fitRandomInterceptSlope)
+
+
+old  <- dft %>% 
+filter(age > 59)
+fitRandomInterceptSlope <- lme(RAVLTlearntall ~ AD_19*timepoint + SES + educ + age + sex,random=~1|id, data=na.omit(old))
+summary(fitRandomInterceptSlope)
+library(RColorBrewer)
+
+case$age_category <- as.numeric(case$age_category)
+
+fitRandomInterceptSlope <- lme(RAVLTlearntall ~ AD_19*timepoint + AD_19*age_category +  AD_19*timepoint*age_category + SES + age + educ + sex,random=~1|id, data=na.omit(dft))
+summary(fitRandomInterceptSlope)
+
+ggpredict(fitRandomInterceptSlope, terms = c("timepoint", "AD_19"), type = "re") %>% 
+  plot() +
+  scale_fill_manual(values = mycolors100)
+
+fita3 <- lm(ISI_all ~ AD_19 + timepoint + tbi:AD_19 + timepoint:tbi + tbi:AD_19 + timepoint:AD_19:tbi + SES + educ + age + sex, data=df_fitbir_long)
+summary(fita3)
+
+probe_interaction(fitRandomInterceptSlope, pred = timepoint, modx = AD_19, data = old,
+                  alpha = .1)
 
 ```
 #WMH
